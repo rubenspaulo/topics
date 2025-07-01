@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Horários de Topics</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f7f7f7;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 480px;
+        margin: 40px auto;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px #0001;
+        padding: 24px 20px 32px 20px;
+      }
+      h1 {
+        font-size: 1.5em;
+        margin-bottom: 0.5em;
+        color: #2d3a4b;
+        text-align: center;
+      }
+      label {
+        display: block;
+        margin-top: 1em;
+        margin-bottom: 0.3em;
+        font-weight: bold;
+      }
+      select,
+      button,
+      input[type="date"] {
+        width: 100%;
+        padding: 8px;
+        font-size: 1em;
+        margin-bottom: 1em;
+        border-radius: 4px;
+        border: 1px solid #bbb;
+      }
+      button {
+        background: #2d8cff;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.2s;
+      }
+      button:hover {
+        background: #1761b0;
+      }
+      .horarios {
+        margin-top: 1.5em;
+        background: #f0f4fa;
+        border-radius: 6px;
+        padding: 1em;
+        min-height: 60px;
+      }
+      .horarios strong {
+        color: #2d3a4b;
+      }
+      .horarios-list {
+        margin: 0.5em 0 0 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .horarios-list li {
+        background: #e3eefd;
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Horários de Topics</h1>
+      <script>
+        // Impede selecionar a mesma cidade como origem e destino
+        document.addEventListener("DOMContentLoaded", function () {
+          const origem = document.getElementById("origem");
+          const destino = document.getElementById("destino");
+
+          function syncOptions(changedSelect, otherSelect) {
+            const selectedValue = changedSelect.value;
+            Array.from(otherSelect.options).forEach((opt) => {
+              opt.disabled = opt.value === selectedValue;
+            });
+            // Se o valor selecionado estiver desabilitado, muda para outro disponível
+            if (otherSelect.value === selectedValue) {
+              for (const opt of otherSelect.options) {
+                if (!opt.disabled) {
+                  otherSelect.value = opt.value;
+                  break;
+                }
+              }
+            }
+          }
+
+          origem.addEventListener("change", () => syncOptions(origem, destino));
+          destino.addEventListener("change", () =>
+            syncOptions(destino, origem)
+          );
+          // Inicializa ao carregar
+          syncOptions(origem, destino);
+        });
+      </script>
+      <form id="consulta-form" autocomplete="off">
+        <label for="origem">Origem:</label>
+        <select id="origem" required>
+          <option value="iguatu">Iguatu</option>
+          <option value="acopiara">Acopiara</option>
+          <option value="carius">Cariús</option>
+          <option value="cedro">Cedro</option>
+          <option value="ico">Icó</option>
+        </select>
+
+        <label for="destino">Destino:</label>
+        <select id="destino" required>
+          <option value="iguatu">Iguatu</option>
+          <option value="acopiara">Acopiara</option>
+          <option value="carius">Cariús</option>
+          <option value="cedro">Cedro</option>
+          <option value="ico">Icó</option>
+        </select>
+
+        <label for="data">Data:</label>
+        <input type="date" id="data" required />
+
+        <button type="submit">Consultar Horários</button>
+      </form>
+      <div class="horarios" id="resultado">
+        <strong>Selecione origem, destino e data para ver os horários.</strong>
+      </div>
+    </div>
+    <script>
+      const horarios = {
+        "acopiara-iguatu": {
+          semana: [
+            "05:20",
+            "05:30",
+            "06:00",
+            "06:10",
+            "06:30",
+            "06:35",
+            "06:45",
+            "07:05",
+            "07:10",
+            "07:40",
+            "08:00",
+            "08:15",
+            "08:20",
+            "08:40",
+            "09:00",
+            "09:10",
+            "09:30",
+            "09:40",
+            "10:00",
+            "10:10",
+            "11:00",
+            "11:10",
+            "11:20",
+            "11:30",
+            "11:40",
+            "12:00",
+            "12:18",
+            "12:30",
+            "13:00",
+            "13:10",
+            "13:40",
+            "14:00",
+            "14:30",
+            "15:00",
+            "15:30",
+            "16:00",
+            "16:45",
+            "17:00",
+          ],
+          domingo: [
+            "06:00",
+            "07:00",
+            "07:10",
+            "07:30",
+            "08:00",
+            "08:20",
+            "10:00",
+            "12:40",
+            "14:20",
+            "15:00",
+            "16:00",
+            "17:00",
+          ],
+        },
+        "iguatu-acopiara": {
+          semana: [
+            "06:20",
+            "07:00",
+            "07:30",
+            "08:10",
+            "08:30",
+            "08:35",
+            "09:00",
+            "09:10",
+            "09:30",
+            "09:40",
+            "10:00",
+            "10:10",
+            "10:20",
+            "10:30",
+            "11:10",
+            "11:30",
+            "11:50",
+            "12:00",
+            "12:10",
+            "12:20",
+            "12:40",
+            "13:00",
+            "13:10",
+            "13:40",
+            "14:00",
+            "14:30",
+            "14:40",
+            "15:00",
+            "15:10",
+            "15:30",
+            "16:00",
+            "16:10",
+            "16:20",
+            "17:00",
+            "17:15",
+            "17:40",
+            "17:45",
+            "18:30",
+          ],
+          domingo: [
+            "05:40",
+            "07:00",
+            "08:00",
+            "09:00",
+            "09:10",
+            "09:40",
+            "11:00",
+            "13:40",
+            "15:20",
+            "16:00",
+            "17:00",
+            "18:00",
+          ],
+        },
+        "cedro-iguatu": {
+          semana: [
+            "06:00",
+            "07:00",
+            "08:00",
+            "09:00",
+            "10:00",
+            "11:00",
+            "12:00",
+            "13:00",
+            "14:00",
+            "15:40",
+            "17:15",
+          ],
+        },
+        "iguatu-cedro": {
+          semana: [
+            "05:30",
+            "07:30",
+            "08:55",
+            "10:35",
+            "11:30",
+            "12:20",
+            "13:20",
+            "14:05",
+            "15:30",
+            "16:30",
+            "17:15",
+          ],
+        },
+        "carius-iguatu": {
+          domingo: ["06:30", "09:40", "14:30", "16:30"],
+        },
+        "iguatu-carius": {
+          domingo: ["07:30", "11:00", "15:30", "17:30"],
+        },
+        "ico-iguatu": {
+          semana: [
+            "05:50",
+            "06:10",
+            "06:30",
+            "07:00",
+            "07:20",
+            "08:00",
+            "08:10",
+            "08:30",
+            "09:00",
+            "10:10",
+            "11:00",
+          ],
+        },
+        "iguatu-ico": {
+          semana: [
+            "06:00",
+            "06:30",
+            "07:00",
+            "07:30",
+            "08:00",
+            "08:20",
+            "08:30",
+            "09:00",
+            "09:30",
+            "10:10",
+            "11:00",
+          ],
+        },
+      };
+
+      function isSundayOrHoliday(date) {
+        // Domingo = 0
+        if (date.getDay() === 0) return true;
+        // Feriados fixos nacionais (dd-mm)
+        const feriados = [
+          // Nenhum feriado fixo listado, pois o usuário pode marcar "feriado" manualmente
+          "21-04", // Tiradentes
+          "01-05", // Dia do Trabalho
+          "07-09", // Independência
+          "12-10", // N. Sra. Aparecida
+          "02-11", // Finados
+          "15-11", // Proclamação da República
+          "25-12", // Natal
+        ];
+        const diaMes = date.toLocaleDateString("pt-BR").slice(0, 5);
+        return feriados.includes(diaMes);
+      }
+
+      document
+        .getElementById("consulta-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const origem = document.getElementById("origem").value;
+          const destino = document.getElementById("destino").value;
+          const dataStr = document.getElementById("data").value;
+          const resultado = document.getElementById("resultado");
+
+          if (origem === destino) {
+            resultado.innerHTML =
+              "<strong>Origem e destino devem ser diferentes.</strong>";
+            return;
+          }
+          if (!dataStr) {
+            resultado.innerHTML =
+              "<strong>Por favor, selecione uma data.</strong>";
+            return;
+          }
+
+          const data = new Date(dataStr + "T00:00:00");
+          const chave = `${origem}-${destino}`;
+          const tipo = isSundayOrHoliday(data) ? "domingo" : "semana";
+          const lista = horarios[chave] ? horarios[chave][tipo] : null;
+
+          if (!lista) {
+            resultado.innerHTML =
+              "<strong>Não há horários cadastrados para essa rota.</strong>";
+            return;
+          }
+
+          resultado.innerHTML = `<strong>Horários de <span style="color:#2d8cff">${capitalize(
+            origem
+          )}</span> para <span style="color:#2d8cff">${capitalize(
+            destino
+          )}</span> (${
+            tipo === "domingo" ? "Domingos e Feriados" : "Segunda a Sábado"
+          }):</strong>
+              <ul class="horarios-list">${lista
+                .map((h) => `<li>${h}</li>`)
+                .join("")}</ul>`;
+        });
+
+      function capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+      }
+    </script>
+  </body>
+</html>
